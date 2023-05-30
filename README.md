@@ -121,6 +121,139 @@ This README file contains my notes from the book Elixir in Action by Saša Juric
     [{a, b} | tail] = [{1, 2}, {3, 4}, {5, 6}]
     a # => 1
   ```
+- Matching with functions. Example:
+  ```elixir
+    defmodule Math do
+      def zero?(0), do: true
+      def zero?(_), do: false
+    end
+    Math.zero?(0) # => true
+    Math.zero?(1) # => false
+  ```
+- Multiclause functions. Example:
+  ```elixir
+    defmodule Math do
+      def zero?(0), do: true
+      def zero?(_), do: false
+    end
+    Math.zero?(0) # => true
+    Math.zero?(1) # => false
+  ```
+- Guard clauses. Example:
+  ```elixir
+    defmodule Math do
+      def zero?(0), do: true
+      def zero?(x) when is_integer(x), do: false
+    end
+    Math.zero?(0) # => true
+    Math.zero?(1) # => false
+  ```
+- Anonymous functions. Example:
+  ```elixir
+    fn
+      0 -> true
+      x when is_integer(x) -> false
+    end
+  ```
+- Anonymous functions with multiple clauses. Example:
+  ```elixir
+    fn
+      0 -> true
+      x when is_integer(x) -> false
+    end
+  ```
+- Branching with multiclause functions. Example:
+  ```elixir
+    defmodule Math do
+      def zero?(0), do: true
+      def zero?(x) when is_integer(x), do: false
+    end
+    Math.zero?(0) # => true
+    Math.zero?(1) # => false
+  ```
+- Classical branching constructs. Example:
+  ```elixir
+    if true do
+      "This works!"
+    end
+  ```
+- `if` is an expression. Example:
+  ```elixir
+    if true, do: "This works!"
+  ```
+- `unless` is an expression. Example:
+  ```elixir
+    unless true, do: "This works!"
+  ```
+- `cond` is an expression. Example:
+  ```elixir
+    cond do
+      2 + 2 == 5 ->
+        "This will not be true"
+      2 * 2 == 3 ->
+        "Nor this"
+      1 + 1 == 2 ->
+        "But this will"
+    end
+  ```
+- `case` is an expression. Example:
+  ```elixir
+    case {:ok, "Hello world"} do
+      {:ok, result} ->
+        "Result is #{result}"
+      {:error, error} ->
+        "Error is #{error}"
+    end
+  ```
+- The with special form. Example:
+  ```elixir
+    with {:ok, file} <- File.open("hello.txt"),
+         content <- IO.read(file) do
+      "File contents: #{content}"
+    else
+      :error -> "Error reading file"
+    end
+  ```
+- Loops and iteration. Example:
+  ```elixir
+    for n <- [1, 2, 3], do: n * n
+  ```
+- Recursion. Example:
+  ```elixir
+    defmodule Recursion do
+      def sum_list([head | tail], accumulator) do
+        sum_list(tail, head + accumulator)
+      end
+      def sum_list([], accumulator) do
+        accumulator
+      end
+    end
+    Recursion.sum_list([1, 2, 3], 0) # => 6
+  ```
+- Tail function calls. Example:
+  ```elixir
+    defmodule Recursion do
+      def sum_list([head | tail], accumulator) do
+        sum_list(tail, head + accumulator)
+      end
+      def sum_list([], accumulator) do
+        accumulator
+      end
+    end
+    Recursion.sum_list([1, 2, 3], 0) # => 6
+  ```
+- Higher-order functions. Example:
+  ```elixir
+    Enum.map([1, 2, 3], fn n -> n * n end)
+  ```
+- Comprehensions. Example:
+  ```elixir
+    for n <- [1, 2, 3], do: n * n
+  ```
+- Streams. Example:
+  ```elixir
+    Stream.map([1, 2, 3], fn n -> n * n end)
+  ```
 
 ## Chapter 4: Topic 4
 
