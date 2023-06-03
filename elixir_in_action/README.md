@@ -9,7 +9,8 @@ This README file contains my notes from the book Elixir in Action by Saša Juric
   - [Chapter 1: First Steps](#chapter-1-first-steps)
   - [Chapter 2: Building Blocks](#chapter-2-building-blocks)
   - [Chapter 3: Control Flow](#chapter-3-control-flow)
-  - [Chapter 4: Topic 4](#chapter-4-topic-4)
+  - [Chapter 4: Data Abstractions](#chapter-4-data-abstractions)
+  - [Chapter 5: Concurrency Primitives](#chapter-5-concurrency-primitives)
 
 ## Chapter 1: First Steps
 
@@ -255,8 +256,45 @@ This README file contains my notes from the book Elixir in Action by Saša Juric
     Stream.map([1, 2, 3], fn n -> n * n end)
   ```
 
-## Chapter 4: Topic 4
+## Chapter 4: Data Abstractions
 
-- Note 1: [Your note here]
-- Note 2: [Your note here]
-- ...
+- Abstraction with modules and functions. Example:
+  ```elixir
+    defmodule Math do
+      def sum(a, b) do
+        a + b
+      end
+    end
+    Math.sum(1, 2) # => 3
+  ```
+- Composing abstractions with pipes. Example:
+  ```elixir
+    "hello world"
+    |> String.split()
+    |> Enum.reverse()
+    |> Enum.join(" ")
+  ```
+- Structuring data with maps. Example:
+  ```elixir
+    %{
+      name: "Dave",
+      city: "Dallas",
+      likes: "Programming"
+    }
+  ```
+- Abstracting with structs. Example:
+  ```elixir
+    defmodule Person do
+      defstruct name: "", city: "", likes: ""
+    end
+    %Person{name: "Dave", city: "Dallas", likes: "Programming"}
+  ```
+- Data transparency. Example:
+  ```elixir
+    %Person{name: "Dave", city: "Dallas", likes: "Programming"}
+    |> Map.put(:likes, "Functional programming")
+  ```
+
+## Chapter 5: Concurrency Primitives
+
+
