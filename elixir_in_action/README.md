@@ -11,6 +11,7 @@ This README file contains my notes from the book Elixir in Action by Saša Juric
   - [Chapter 3: Control Flow](#chapter-3-control-flow)
   - [Chapter 4: Data Abstractions](#chapter-4-data-abstractions)
   - [Chapter 5: Concurrency Primitives](#chapter-5-concurrency-primitives)
+  - [Chapter 6: Generic Server Processes](#chapter-6-generic-server-processes)
 
 ## Chapter 1: First Steps
 
@@ -297,4 +298,52 @@ This README file contains my notes from the book Elixir in Action by Saša Juric
 
 ## Chapter 5: Concurrency Primitives
 
+- Concurrency in BEAM languages. Example:
+  ```elixir
+    spawn fn -> 1 + 2 end
+  ```
+- Sending messages. Example:
+  ```elixir
+    self() # => #PID<0.87.0>
+    send(self(), {:hello, "world"})
+  ```
+- `receive` blocks. Example:
+  ```elixir
+    receive do
+      {:hello, msg} -> msg
+    end
+  ```
+- `receive` blocks with timeouts. Example:
+  ```elixir
+    receive do
+      {:hello, msg} -> msg
+    after
+      1_000 -> "Nothing after 1 second"
+    end
+  ```
+- Stateful server processes. Example:
+  ```elixir
+    defmodule Counter do
+      def start(initial_count) do
+        spawn fn -> loop(initial_count) end
+      end
 
+      defp loop(count) do
+        receive do
+          {:inc, sender} ->
+            sender |> send({:ok, count + 1})
+            loop(count + 1)
+          {:get, sender} ->
+            sender |> send({:ok, count})
+            loop(count)
+        end
+      end
+    end
+    {:ok, pid} = Counter.start(0)
+    send(pid, {:inc, self()})
+    receive do
+      {:ok, count} -> count
+    end
+  ```
+
+## Chapter 6: Generic Server Processes
