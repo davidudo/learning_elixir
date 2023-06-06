@@ -347,3 +347,94 @@ This README file contains my notes from the book Elixir in Action by Saša Juric
   ```
 
 ## Chapter 6: Generic Server Processes
+
+- Generic server processes. Example:
+  ```elixir
+    defmodule Counter do
+      def start(initial_count) do
+        spawn_link fn -> loop(initial_count) end
+      end
+
+      defp loop(count) do
+        receive do
+          {:inc, sender} ->
+            sender |> send({:ok, count + 1})
+            loop(count + 1)
+          {:get, sender} ->
+            sender |> send({:ok, count})
+            loop(count)
+        end
+      end
+    end
+    {:ok, pid} = Counter.start(0)
+    send(pid, {:inc, self()})
+    receive do
+      {:ok, count} -> count
+    end
+  ```
+- Using Genserver. Example:
+  ```elixir
+    defmodule Counter do
+      use GenServer
+
+      def start_link(initial_count) do
+        GenServer.start_link(__MODULE__, initial_count)
+      end
+
+      def init(initial_count) do
+        {:ok, initial_count}
+      end
+
+      def inc do
+        GenServer.cast(__MODULE__, :inc)
+      end
+
+      def get do
+        GenServer.call(__MODULE__, :get)
+      end
+
+      def handle_cast(:inc, count) do
+        {:noreply, count + 1}
+      end
+
+      def handle_call(:get, _from, count) do
+        {:reply, count, count}
+      end
+    end
+    {:ok, pid} = Counter.start_link(0)
+    Counter.inc()
+    Counter.get()
+  ```
+- Using Genserver with state. Example:
+  ```elixir
+    defmodule Counter do
+      use GenServer
+
+      def start_link(initial_count) do
+        GenServer.start_link(__MODULE__, initial_count)
+      end
+
+      def init(initial_count) do
+        {:ok, initial_count}
+      end
+
+      def inc do
+        GenServer.cast(__MODULE__, :inc)
+      end
+
+      def get do
+        GenServer.call(__MODULE__, :get)
+      end
+
+      def handle_cast(:inc, count) do
+        {:noreply, count + 1}
+      end
+
+      def handle_call(:get, _from, count) do
+        {:reply, count, count}
+      end
+    end
+    {:ok, pid} = Counter.start_link(0)
+    Counter.inc()
+    Counter.get()
+  ```
